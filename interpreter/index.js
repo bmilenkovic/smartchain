@@ -1,5 +1,8 @@
 const STOP = 'STOP';
 const ADD = 'ADD';
+const SUB = 'SUB';
+const MUL = 'MUL';
+const DIV = 'DIV';
 const PUSH = 'PUSH';
 
 class Interpreter {
@@ -22,21 +25,34 @@ class Interpreter {
           case STOP:
             throw new Error('Execution complete');
           case PUSH:
+
             this.state.programCounter++;
             const value = this.state.code[this.state.programCounter];
+            console.log('push', value);
             this.state.stack.push(value);
             break;
           case ADD:
+          case SUB:
+          case MUL:
+          case DIV:
             const a = this.state.stack.pop();
             const b = this.state.stack.pop();
 
-            this.state.stack.push(a+b);
+            let result;
+
+            if (opCode === ADD) result = a + b;
+            if (opCode === SUB) result = a - b;
+            if (opCode === MUL) result = a * b;
+            if (opCode === DIV) result = a / b;
+
+            this.state.stack.push(result);
             break;
+
           default:
             break;
         }
       } catch (error) {
-        return this.state.stack[this.state.stack.length-1];
+        return this.state.stack[this.state.stack.length - 1];
       }
 
       this.state.programCounter++;
@@ -44,6 +60,18 @@ class Interpreter {
   }
 }
 
-const code = [PUSH, 2, PUSH, 3, ADD, STOP];
-const interpreter = new Interpreter();
-interpreter.runCode(code);
+let code = [PUSH, 2, PUSH, 3, ADD, STOP];
+let result1 = new Interpreter().runCode(code);
+console.log('Result of 3 ADD 2 = ', result1);
+
+code = [PUSH, 2, PUSH, 3, SUB, STOP];
+result1 = new Interpreter().runCode(code);
+console.log('Result of 3 SUB 2 = ', result1);
+
+code = [PUSH, 2, PUSH, 3, MUL, STOP];
+result = new Interpreter().runCode(code);
+console.log('Result of 3 MUL 2:', result);
+
+code = [PUSH, 2, PUSH, 3, DIV, STOP];
+result = new Interpreter().runCode(code);
+console.log('Result of 3 DIV 2:', result);
