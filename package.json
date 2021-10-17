@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./api",
+    "dev-peer": "nodemon ./api --peer",
     "start": "node ./api",
     "test": "jest --watchAll"
   },
@@ -22,7 +23,8 @@
   "dependencies": {
     "express": "^4.17.1",
     "jest": "^27.2.4",
-    "js-sha3": "^0.8.0"
+    "js-sha3": "^0.8.0",
+    "pubnub": "^4.33.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.13"
