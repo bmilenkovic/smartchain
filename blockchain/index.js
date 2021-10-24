@@ -12,6 +12,9 @@ class Blockchain {
         block
       }).then(() => {
         this.chain.push(block);
+        transactionQueue.clearBlockTransactions({
+          transactionSeries: block.transactionSeries
+        });
         return resolve();
       }).catch(reject);
     });
