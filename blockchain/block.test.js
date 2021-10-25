@@ -83,7 +83,11 @@ describe('Block', () => {
 
     beforeEach(() => {
       lastBlock = Block.genesis();
-      block = Block.mineBlock({ lastBlock, beneficiary: 'beneficiary' });
+      block = Block.mineBlock({
+        lastBlock,
+        beneficiary: 'beneficiary',
+        transactionSeries: []
+      });
     });
 
 
@@ -99,24 +103,24 @@ describe('Block', () => {
       block.blockHeaders.parentHash = 'foo';
 
       expect(Block.validateBlock({ lastBlock, block })).rejects.toMatchObject({
-          message: "The parent hash must be a hash of the last block's headers"
-        });
+        message: "The parent hash must be a hash of the last block's headers"
+      });
     });
 
     it('rejects when the number is not increased by one', () => {
       block.blockHeaders.number = 500;
 
       expect(Block.validateBlock({ lastBlock, block })).rejects.toMatchObject({
-          message: 'The block must increment the number by 1'
-        });
+        message: 'The block must increment the number by 1'
+      });
     });
 
     it('rejects when the difficulty adjusts by more than 1', () => {
       block.blockHeaders.difficulty = 999;
 
       expect(Block.validateBlock({ lastBlock, block })).rejects.toMatchObject({
-          message: 'The difficulty must only adjust by 1'
-        });
+        message: 'The difficulty must only adjust by 1'
+      });
     });
 
     it('rejects when the proof of work requirement is not met', () => {
@@ -126,8 +130,8 @@ describe('Block', () => {
       }
 
       expect(Block.validateBlock({ lastBlock, block })).rejects.toMatchObject({
-          message: 'The block does not meet the proof of work requirement'
-        });
+        message: 'The block does not meet the proof of work requirement'
+      });
 
       Block.calculateBlockTargetHash = originalCalculateBlockTargetHash;
     });

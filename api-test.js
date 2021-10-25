@@ -25,6 +25,7 @@ const getMine = () => {
     });
 }
 
+let toAccountData;
 postTransact({})
     .then(postTransactResponse => {
         console.log(
@@ -34,7 +35,12 @@ postTransact({})
 
         toAccountData = postTransactResponse.transaction.data.accountData;
 
+        return getMine();
+    }).then(getMineResponse => {
+        console.log('getMineResponse', getMineResponse);
+
         return postTransact({ to: toAccountData.address, value: 20 });
+
     })
     .then(postTransactResponse2 => {
         console.log(
