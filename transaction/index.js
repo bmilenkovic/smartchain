@@ -107,7 +107,7 @@ class Transaction {
     toAccount.balance += value;
 
     state.putAccount({ address: transaction.from, accountData: fromAccount });
-    state.putAccount({ address: transaction.to, accountDAta: toAccount });
+    state.putAccount({ address: transaction.to, accountData: toAccount });
 
   }
 

@@ -3,12 +3,12 @@ const request = require('request');
 
 const BASE_URL = 'http://localhost:3000';
 
-const postTransact = ({ code, to, value, gasLimit }) => {
+const postTransact = ({ code, to, value }) => {
     return new Promise((resolve, reject) => {
         request(`${BASE_URL}/account/transact`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code, to, value, gasLimit })
+            body: JSON.stringify({ code, to, value })
         }, (error, response, body) => {
             return resolve(JSON.parse(body));
         });
@@ -16,14 +16,25 @@ const postTransact = ({ code, to, value, gasLimit }) => {
 }
 
 const getMine = () => {
-    setTimeout(() => {
-        return new Promise((resolve, reject) => {
-            request(`${BASE_URL}/blockchain/mine`, (error, response, body) => {
-                return resolve(JSON.parse(body));
-            });
-        }, 1000);
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        request(`${BASE_URL}/blockchain/mine`, (error, response, body) => {
+          return resolve(JSON.parse(body));
+        });
+      }, 3000);
     });
-}
+  }
+
+  const getAccountBalance = ({ address } = {}) => {
+    return new Promise((resolve, reject) => {
+      request(
+        `${BASE_URL}/account/balance` + (address ? `?address=${address}` : ''),
+        (error, response, body) => {
+          return resolve(JSON.parse(body));
+        }
+      );
+    });
+  }
 
 let toAccountData;
 postTransact({})
@@ -52,6 +63,16 @@ postTransact({})
 
     })
 
-    .then((getMineResponse) => {
-        console.log('getMineResponse', getMineResponse);
-    });
+    .then( getMineResponse2 => {
+        console.log('getMineResponse2', getMineResponse2);
+
+        return getAccountBalance();
+    })
+     .then(getAccountBalanceResponse => {
+         console.log('getAccountBalanceResponse', getAccountBalanceResponse);
+
+         return getAccountBalance({ address: toAccountData.address});
+     })
+        .then(getAccountBalanceResponse2 => {
+            console.log('getAccountBalanceResponse2', getAccountBalanceResponse2);
+        });
