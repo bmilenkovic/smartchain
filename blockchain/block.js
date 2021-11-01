@@ -107,17 +107,21 @@ class Block {
         return reject(new Error('The block does not meet the proof of work requirement'))
       }
 
-      return resolve();
-
+      Transaction.validateTransactionSeries({
+        state, transactionSeries: block.transactionSeries
+      }).then(resolve)
+        .catch(reject);
+        
     });
 
-    
+
+
   }
 
   static runBlock({ block, state }) {
     for (let transaction of block.transactionSeries) {
-      Transaction.runTransaction({ transaction, state});
-                  
+      Transaction.runTransaction({ transaction, state });
+
     }
   }
 
