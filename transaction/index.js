@@ -43,7 +43,7 @@ class Transaction {
 
     static validateStandardTransaction({ state, transaction }) {
         return new Promise((resolve, reject) => {
-            const { id, from, signature, value } = transaction;
+            const { id, from, signature, value, to } = transaction;
             const transactionData = { ...transaction };
             delete transactionData.signature;
 
