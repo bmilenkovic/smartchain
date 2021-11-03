@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const { keccakHash } = require("../util");
+const { keccakHash } = require('../util');
 
 class Node {
     constructor() {
@@ -46,11 +46,16 @@ class Trie {
         node.value = value;
         this.generateRootHash();
     }
+
+    static buildTrie({ items }) {
+        const trie = new this();
+    
+        for (let item of items.sort((a, b) => keccakHash(a) > keccakHash(b))) {
+          trie.put({ key: keccakHash(item), value: item });
+        }
+    
+        return trie;
+      }
 }
 
 module.exports = Trie;
-
-// const trie = new Trie();
-// trie.put({key: 'foo', value: 'bar'});
-// trie.put({key: 'food', value: 'ramen'});
-// console.log('JSON.stringify(trie)', JSON.stringify(trie));

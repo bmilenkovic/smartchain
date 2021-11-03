@@ -1,6 +1,7 @@
 const { GENESIS_DATA, MINE_RATE } = require('../config');
 const { keccakHash } = require('../util');
 const Transaction = require('../transaction');
+const Trie = require('../store/trie');
 
 const HASH_LENGTH = 64;
 const MAX_HASH_VALUE = parseInt('f'.repeat(HASH_LENGTH), 16);
@@ -43,6 +44,7 @@ class Block {
     stateRoot
   }) {
     const target = Block.calculateBlockTargetHash({ lastBlock });
+    const transactionsTrie = Trie.buildTrie({ items: transactionSeries });
     let timestamp, truncatedBlockHeaders, header, nonce, underTargetHash;
 
     let i = 0;
@@ -54,7 +56,7 @@ class Block {
         difficulty: Block.adjustDifficulty({ lastBlock, timestamp }),
         number: lastBlock.blockHeaders.number + 1,
         timestamp,
-        transactionRoot: keccakHash(transactionSeries),
+        transactionsRoot: transactionsTrie.rootHash,
         stateRoot
       };
       header = keccakHash(truncatedBlockHeaders);
@@ -76,7 +78,7 @@ class Block {
     return new this(GENESIS_DATA);
   }
 
-  static validateBlock({ lastBlock, block }) {
+  static validateBlock({ lastBlock, block, state }) {
     return new Promise((resolve, reject) => {
 
       if (keccakHash(block) === keccakHash(Block.genesis())) {
@@ -95,6 +97,10 @@ class Block {
         return reject(new Error('The difficulty must only adjust by 1'))
       }
 
+      const rebuiltTransactionsTrie = Trie.buildTrie({
+        items: block.transactionSeries
+      });
+
       const target = Block.calculateBlockTargetHash({ lastBlock });
       const { blockHeaders } = block;
       const { nonce } = blockHeaders;
@@ -105,6 +111,14 @@ class Block {
 
       if (underTargetHash > target) {
         return reject(new Error('The block does not meet the proof of work requirement'))
+      }
+
+      if (rebuiltTransactionsTrie.rootHash !== block.blockHeaders.transactionsRoot) {
+        return reject(
+          new Error(
+            `The rebuilt transactions root does not match the block's ` +
+            `transactions root: ${block.blockHeaders.transactionRoot}`)
+        );
       }
 
       Transaction.validateTransactionSeries({
