@@ -85,9 +85,6 @@ class Transaction {
       }
 
       if (toAccount.codeHash) {
-        // const { gasUsed } = new Interpreter({
-        //   storageTrie: state.storageTrieMap[toAccount.codeHash]
-        // }).runCode(toAccount.code);
         const { gasUsed } = new Interpreter().runCode(toAccount.code);
 
         if (gasUsed > gasLimit) {
