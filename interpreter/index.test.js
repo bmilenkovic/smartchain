@@ -22,62 +22,62 @@ describe('Interpreter', () => {
     describe('runCode()', () => {
         describe('and the code inludes ADD', () => {
             it('adds two values', () => {
-                expect(new Interpreter().runCode([PUSH, 2, PUSH, 3, ADD, STOP])).toEqual(5);
+                expect(new Interpreter().runCode([PUSH, 2, PUSH, 3, ADD, STOP]).result).toEqual(5);
             });
         });
 
         describe('and the code inludes SUB', () => {
             it('subtracts one value from another', () => {
-                expect(new Interpreter().runCode([PUSH, 2, PUSH, 3, SUB, STOP])).toEqual(1);
+                expect(new Interpreter().runCode([PUSH, 2, PUSH, 3, SUB, STOP]).result).toEqual(1);
             });
         });
 
         describe('and the code inludes MUL', () => {
             it('products two values', () => {
                 expect(
-                    new Interpreter().runCode([PUSH, 2, PUSH, 3, MUL, STOP])).toEqual(6);
+                    new Interpreter().runCode([PUSH, 2, PUSH, 3, MUL, STOP]).result).toEqual(6);
             });
         });
 
         describe('and the code inludes DIV', () => {
             it('divides one value from another', () => {
                 expect(
-                    new Interpreter().runCode([PUSH, 2, PUSH, 3, DIV, STOP])).toEqual(1.5);
+                    new Interpreter().runCode([PUSH, 2, PUSH, 3, DIV, STOP]).result).toEqual(1.5);
             });
         });
 
         describe('and the code inludes LT', () => {
             it('checks if one value is less than another', () => {
                 expect(
-                    new Interpreter().runCode([PUSH, 2, PUSH, 3, LT, STOP])).toEqual(0);
+                    new Interpreter().runCode([PUSH, 2, PUSH, 3, LT, STOP]).result).toEqual(0);
             });
         });
 
         describe('and the code inludes GT', () => {
             it('checks if one value is greater than another', () => {
                 expect(
-                    new Interpreter().runCode([PUSH, 2, PUSH, 3, GT, STOP])).toEqual(1);
+                    new Interpreter().runCode([PUSH, 2, PUSH, 3, GT, STOP]).result).toEqual(1);
             });
         });
 
         describe('and the code inludes EQ', () => {
             it('checks if one value is equal to another', () => {
                 expect(
-                    new Interpreter().runCode([PUSH, 2, PUSH, 3, EQ, STOP])).toEqual(0);
+                    new Interpreter().runCode([PUSH, 2, PUSH, 3, EQ, STOP]).result).toEqual(0);
             });
         });
 
         describe('and the code inludes AND', () => {
             it('ands two conditions', () => {
                 expect(
-                    new Interpreter().runCode([PUSH, 1, PUSH, 0, AND, STOP])).toEqual(0);
+                    new Interpreter().runCode([PUSH, 1, PUSH, 0, AND, STOP]).result).toEqual(0);
             });
         });
 
         describe('and the code inludes OR', () => {
             it('ors two conditions', () => {
                 expect(
-                    new Interpreter().runCode([PUSH, 1, PUSH, 0, OR, STOP])).toEqual(1);
+                    new Interpreter().runCode([PUSH, 1, PUSH, 0, OR, STOP]).result).toEqual(1);
             });
         });
 
@@ -85,7 +85,7 @@ describe('Interpreter', () => {
             it('jumps to a destination', () => {
                 expect(
                     new Interpreter().runCode(
-                        [PUSH, 6, JUMP, PUSH, 0, JUMP, PUSH, 'jump successful', STOP])).toEqual('jump successful');
+                        [PUSH, 6, JUMP, PUSH, 0, JUMP, PUSH, 'jump successful', STOP]).result).toEqual('jump successful');
             });
         });
 
@@ -93,7 +93,7 @@ describe('Interpreter', () => {
             it('jumps to a destination', () => {
                 expect(
                     new Interpreter().runCode(
-                        [PUSH, 8, PUSH, 1, JUMPI, PUSH, 0, JUMP, PUSH, 'jump successful', STOP])).toEqual('jump successful');
+                        [PUSH, 8, PUSH, 1, JUMPI, PUSH, 0, JUMP, PUSH, 'jump successful', STOP]).result).toEqual('jump successful');
             });
         });
 
