@@ -2,6 +2,7 @@ const { reject } = require('lodash');
 const uuid = require('uuid/v4');
 const Account = require('../account');
 const { MINING_REWARD } = require('../config');
+const Interpreter = require('../interpreter');
 
 const TRANSACTION_TYPE_MAP = {
   CREATE_ACCOUNT: 'CREATE_ACCOUNT',
@@ -181,6 +182,13 @@ class Transaction {
     const fromAccount = state.getAccount({ address: transaction.from });
     const toAccount = state.getAccount({ address: transaction.to });
 
+    if (toAccount.codeHash) {
+      const interpeter = new Interpreter();
+
+      const result = interpeter.runCode(toAccount.code);
+      console.log(` -*- Smart contract execution: ${transaction.id} - RESULT: ${result}`);
+    }
+
     const { value } = transaction;
 
     fromAccount.balance -= value;
@@ -193,9 +201,9 @@ class Transaction {
 
   static runCreateAccountTransaction({ state, transaction }) {
     const { accountData } = transaction.data;
-    const { address } = accountData;
+    const { address, codeHash } = accountData;
 
-    state.putAccount({ address, accountData });
+    state.putAccount({ address: codeHash ? codeHash : address, accountData });
 
   }
 

@@ -51,9 +51,9 @@ app.get('/blockchain/mine', (req, res, next) => {
 });
 
 app.post('/account/transact', (req, res, next) => {
-    const { to, value } = req.body;
+    const { code, to, value } = req.body;
     const transaction = Transaction.createTransaction({
-        account: !to ? new Account() : account,
+        account: !to ? new Account({ code }) : account,
         to,
         value
     });
@@ -66,10 +66,11 @@ app.post('/account/transact', (req, res, next) => {
 app.get('/account/balance', (req, res, next) => {
     const { address } = req.query;
     const balance = Account.calculateBalance({
-        address: address || account.address, 
-        state});
+        address: address || account.address,
+        state
+    });
 
-        res.json({balance});
+    res.json({ balance });
 });
 
 app.use((err, req, res, next) => {
