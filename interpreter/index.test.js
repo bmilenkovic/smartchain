@@ -1,5 +1,5 @@
 const Interpreter = require('./index');
-
+const Trie = require('../store/trie');
 const {
     STOP,
     ADD,
@@ -95,6 +95,36 @@ describe('Interpreter', () => {
                     new Interpreter().runCode(
                         [PUSH, 8, PUSH, 1, JUMPI, PUSH, 0, JUMP, PUSH, 'jump successful', STOP]).result).toEqual('jump successful');
             });
+        });
+
+        describe('and the code includes STORE', () => {
+            it('stores a value', () => {
+                const interpreter = new Interpreter({
+                    storageTrie: new Trie()
+                });
+                const key = 'foo';
+                const value = 'bar';
+
+                interpreter.runCode([PUSH, value, PUSH, key, STORE, STOP]);
+
+                expect(interpreter.storageTrie.get({ key })).toEqual(value);
+            })
+        });
+
+        describe('and the code includes LOAD', () => {
+            it('it loads', () => {
+                const interpreter = new Interpreter({
+                    storageTrie: new Trie()
+                });
+                const key = 'foo';
+                const value = 'bar';
+
+                expect(
+                    interpreter.runCode(
+                        [PUSH, value, PUSH, key, STORE, PUSH, key, LOAD, STOP]
+                    ).result
+                ).toEqual(value);
+            })
         });
 
         describe('and the code includes an invalid JUMP destination', () => {

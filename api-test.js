@@ -63,7 +63,9 @@ postTransact({})
       postTransactResponse2
     );
 
-    const code = [PUSH, 4, PUSH, 5, ADD, STOP];
+    const key = 'foo';
+    const value = 'bar';
+    const code = [PUSH, value, PUSH, key, STORE, PUSH, key, LOAD, STOP];
 
     return postTransact({ code });
 
